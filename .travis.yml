@@ -307,11 +307,10 @@ script:
     fi
 
 after_success:
- Package and deploy the build to GitHub.  This will only run for builds on
- master (i.e. pull requests are only built and tested but not deployed).
+#  Package and deploy the build to GitHub.  This will only run for builds on
+#  master (i.e. pull requests are only built and tested but not deployed).
 
- GH_TOKEN must be set in order to deploy releases to GitHub
-
+#  GH_TOKEN must be set in order to deploy releases to GitHub
 - |
  if [ "${TRAVIS_OS_NAME}" == "osx" -a "${TRAVIS_PULL_REQUEST}" == "false" -a "${DEPLOY}" == "1" ]; then
     brew ls --versions jq || brew install jq
