@@ -21,10 +21,10 @@ env:
   global:
     - GENERATOR="Unix Makefiles"
     - CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Release}
-#    - FREECAD_RELEASE="0.18"
-#    - DEPLOY_RELEASE=${DEPLOY_RELEASE:-$FREECAD_RELEASE}
-#    - OSX_PORTS_CACHE=${OSX_PORTS_CACHE:-FreeCAD/FreeCAD-ports-cache}
-#    - DEPLOY=${DEPLOY:-0}
+    - FREECAD_RELEASE="0.19xf"
+    - DEPLOY_RELEASE=${DEPLOY_RELEASE:-$FREECAD_RELEASE}
+    - OSX_PORTS_CACHE=${OSX_PORTS_CACHE:-FreeCAD/FreeCAD-ports-cache}
+    - DEPLOY=${DEPLOY:-0}
 
 # jobs:
     # chunk.io key (if needed, obtain it with Yorik, PrzemoF, Kunda1)
@@ -35,12 +35,6 @@ git:
 
 notifications:
   email: false
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/479456663cdf5c84e4d8
-    on_success: always
-    on_failure: always
-    on_start:   change
 
 # Inject osx build into matrix - needed to specify image/dist
 jobs:
@@ -48,8 +42,7 @@ jobs:
 #      - python: 3.7
     fast_finish: true  # https://blog.travis-ci.com/2013-11-27-fast-finishing-builds
     include:
-      - if: type != pull_request
-        os: linux
+      - os: linux
         dist: bionic
         language: cpp
         compiler: clang
@@ -68,58 +61,58 @@ jobs:
           - CMAKE_ARGS="-DPYTHON_EXECUTABLE=/usr/bin/python3 -DBUILD_FEM_NETGEN=ON -DBUILD_QT5=ON"
           - CACHE_NAME=JOB1
 
-      - os: linux
-        dist: bionic
-        language: cpp
-        compiler: gcc-10
-        cache: ccache
-        addons:
-          apt:
-            sources:
-              - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            packages:
-              - gcc-10
-              - g++-10
-        env:
-          - CC=gcc-10
-          - CXX=g++-10
-          - CC_FOR_BUILD=gcc-10
-          - CXX_FOR_BUILD=g++-10
-          - CMAKE_ARGS="-DCMAKE_CXX_COMPILER=/usr/bin/c++ -DCMAKE_C_COMPILER=/usr/bin/cc -DPYTHON_EXECUTABLE=/usr/bin/python3 -DBUILD_FEM_NETGEN=ON -DBUILD_QT5=ON"
-          - CACHE_NAME=JOB2
+#       - os: linux
+#         dist: bionic
+#         language: cpp
+#         compiler: gcc-10
+#         cache: ccache
+#         addons:
+#           apt:
+#             sources:
+#               - sourceline: 'ppa:ubuntu-toolchain-r/test'
+#             packages:
+#               - gcc-10
+#               - g++-10
+#         env:
+#           - CC=gcc-10
+#           - CXX=g++-10
+#           - CC_FOR_BUILD=gcc-10
+#           - CXX_FOR_BUILD=g++-10
+#           - CMAKE_ARGS="-DCMAKE_CXX_COMPILER=/usr/bin/c++ -DCMAKE_C_COMPILER=/usr/bin/cc -DPYTHON_EXECUTABLE=/usr/bin/python3 -DBUILD_FEM_NETGEN=ON -DBUILD_QT5=ON"
+#           - CACHE_NAME=JOB2
 
-      - os: linux
-        dist: bionic
-        language: cpp
-        compiler: gcc-7
-        cache: ccache
-        env:
-          - CC=gcc-7
-          - CXX=g++-7
-          - CC_FOR_BUILD=gcc-7
-          - CXX_FOR_BUILD=g++-7
-          - CMAKE_ARGS="-DCMAKE_CXX_COMPILER=/usr/bin/c++ -DCMAKE_C_COMPILER=/usr/bin/cc"
-          - CACHE_NAME=JOB3
+#       - os: linux
+#         dist: bionic
+#         language: cpp
+#         compiler: gcc-7
+#         cache: ccache
+#         env:
+#           - CC=gcc-7
+#           - CXX=g++-7
+#           - CC_FOR_BUILD=gcc-7
+#           - CXX_FOR_BUILD=g++-7
+#           - CMAKE_ARGS="-DCMAKE_CXX_COMPILER=/usr/bin/c++ -DCMAKE_C_COMPILER=/usr/bin/cc"
+#           - CACHE_NAME=JOB3
 
-      - os: windows
-        language: cpp
-        env:
-          - CMAKE_OPTS="-DBUILD_FEM_NETGEN=ON -DFREECAD_RELEASE_PDB=OFF -DFREECAD_RELEASE_SEH=OFF"
-          - GENERATOR="Visual Studio 15 2017 Win64"
-          - PYTHON_MAJOR_VERSION=3
-          - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
-          - TEST_PATH="C:\Users\travis\build\FreeCAD\FreeCAD\build\bin"
-          - CLCACHE_PATH="C:\Users\travis\build\FreeCAD\FreeCAD"
-          - VS15=true
-          - CCACHE_TEMPDIR=/tmp/.ccache-temp
-          - CCACHE_COMPRESS=1
-          - CCACHE_DIR=$HOME/.ccache
-          - CACHE_NAME=JOB5
-          # enable this if clcache extended log is needed
-          #- CLCACHE_LOG=1
-        cache:
-          directories:
-            - $HOME/clcache
+#       - os: windows
+#         language: cpp
+#         env:
+#           - CMAKE_OPTS="-DBUILD_FEM_NETGEN=ON -DFREECAD_RELEASE_PDB=OFF -DFREECAD_RELEASE_SEH=OFF"
+#           - GENERATOR="Visual Studio 15 2017 Win64"
+#           - PYTHON_MAJOR_VERSION=3
+#           - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+#           - TEST_PATH="C:\Users\travis\build\FreeCAD\FreeCAD\build\bin"
+#           - CLCACHE_PATH="C:\Users\travis\build\FreeCAD\FreeCAD"
+#           - VS15=true
+#           - CCACHE_TEMPDIR=/tmp/.ccache-temp
+#           - CCACHE_COMPRESS=1
+#           - CCACHE_DIR=$HOME/.ccache
+#           - CACHE_NAME=JOB5
+#           # enable this if clcache extended log is needed
+#           #- CLCACHE_LOG=1
+#         cache:
+#           directories:
+#             - $HOME/clcache
 
 #      - language: python
 #        python: 3.7
@@ -312,21 +305,20 @@ script:
         grep --file=../.log_errors /tmp/FreeCAD_installed.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from /usr/local/bin" || ( echo "Error from .log_errors found!" && false )
     fi
 
-#after_success:
+after_success:
 #  Package and deploy the build to GitHub.  This will only run for builds on
 #  master (i.e. pull requests are only built and tested but not deployed).
-#
+
 #  GH_TOKEN must be set in order to deploy releases to GitHub
-#
-#- |
-#  if [ "${TRAVIS_OS_NAME}" == "osx" -a "${TRAVIS_PULL_REQUEST}" == "false" -a "${DEPLOY}" == "1" ]; then
-#     brew ls --versions jq || brew install jq
-#     npm install -g appdmg
-#     export VSN=$(python ${TRAVIS_BUILD_DIR}/src/Tools/ArchiveNameFromVersionHeader.py ${TRAVIS_BUILD_DIR}/build/src/Build/Version.h)
-#     export DEPLOYMENT_ARCHIVE=${VSN}-${QT}.dmg
-#     appdmg ${TRAVIS_BUILD_DIR}/src/MacAppBundle/DiskImage/layout.json "${DEPLOYMENT_ARCHIVE}"
-#     deployContext=$(create_helper_context repo=${TRAVIS_REPO_SLUG} auth_token=${GH_TOKEN} release=${DEPLOY_RELEASE})
-#     gitHub_deploy_asset_to_release_named $deployContext ${DEPLOYMENT_ARCHIVE}
-#     gitHub_prune_assets_for_release_named $deployContext "-${QT}" 1
-#  fi
+- |
+ if [ "${TRAVIS_OS_NAME}" == "osx" -a "${TRAVIS_PULL_REQUEST}" == "false" -a "${DEPLOY}" == "1" ]; then
+    brew ls --versions jq || brew install jq
+    npm install -g appdmg
+    export VSN=$(python ${TRAVIS_BUILD_DIR}/src/Tools/ArchiveNameFromVersionHeader.py ${TRAVIS_BUILD_DIR}/build/src/Build/Version.h)
+    export DEPLOYMENT_ARCHIVE=${VSN}-${QT}.dmg
+    appdmg ${TRAVIS_BUILD_DIR}/src/MacAppBundle/DiskImage/layout.json "${DEPLOYMENT_ARCHIVE}"
+    deployContext=$(create_helper_context repo=${TRAVIS_REPO_SLUG} auth_token=${GH_TOKEN} release=${DEPLOY_RELEASE})
+    gitHub_deploy_asset_to_release_named $deployContext ${DEPLOYMENT_ARCHIVE}
+    gitHub_prune_assets_for_release_named $deployContext "-${QT}" 1
+ fi
 
